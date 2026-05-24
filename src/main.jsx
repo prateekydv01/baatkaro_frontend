@@ -18,7 +18,7 @@ import {
 import AuthLayout from "./components/auth/AuthLayout.jsx";
 
 import LoginPage from "./pages/LoginPage.jsx";
-import SignupPage from "./pages/SignUpPage.jsx";
+import SignUpPage from "./pages/SignupPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import MyFriendsPage from "./pages/MyFriendsPage.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
