@@ -1,40 +1,75 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { logout } from "../../store/authSlice";
-
 import { logoutUser } from "../../../api/auth";
-
-import {
-   useNavigate,
-   useLocation
-} from "react-router-dom";
-
-import ThemeButton from "./ThemeButton";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import {
    Menu,
    X,
    MessageCircle,
-   Users
+   Users,
+   Moon,
+   Sun
 } from "lucide-react";
 
 function Navbar() {
 
    const dispatch = useDispatch();
-
    const navigate = useNavigate();
-
    const location = useLocation();
 
-   const [menuOpen, setMenuOpen] =
-      useState(false);
+   const [menuOpen, setMenuOpen] = useState(false);
+   const [darkMode, setDarkMode] = useState(false);
 
-   const { status, userData } =
-      useSelector(
-         (state) => state.auth
-      );
+   const { status, userData } = useSelector(
+      (state) => state.auth
+   );
+
+   useEffect(() => {
+
+      const savedTheme =
+         localStorage.getItem("theme");
+
+      if (savedTheme === "dark") {
+
+         document.documentElement.classList.add("dark");
+         setDarkMode(true);
+
+      } else {
+
+         document.documentElement.classList.remove("dark");
+         setDarkMode(false);
+
+      }
+
+   }, []);
+
+   const toggleTheme = () => {
+
+      if (darkMode) {
+
+         document.documentElement.classList.remove("dark");
+
+         localStorage.setItem(
+            "theme",
+            "light"
+         );
+
+      } else {
+
+         document.documentElement.classList.add("dark");
+
+         localStorage.setItem(
+            "theme",
+            "dark"
+         );
+
+      }
+
+      setDarkMode(!darkMode);
+
+   };
 
    const handleLogout = async () => {
 
@@ -54,8 +89,12 @@ function Navbar() {
 
    };
 
-   const isActive = (path) =>
-      location.pathname === path;
+   const navBtn = (active) =>
+      `px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+         active
+            ? "bg-black text-white dark:bg-white dark:text-black"
+            : "text-black dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-900"
+      }`;
 
    return (
 
@@ -63,43 +102,46 @@ function Navbar() {
          className="
             sticky top-0 z-50
 
-            bg-white/80 dark:bg-black/80
-            backdrop-blur-xl
-
             border-b border-zinc-200
             dark:border-zinc-800
+
+            bg-white/70 dark:bg-black/70
+
+            backdrop-blur-xl
          "
       >
 
          <div
             className="
-               h-16
-               px-4 md:px-6
+               max-w-7xl mx-auto
+
+               h-16 px-4
 
                flex items-center justify-between
             "
          >
 
-            {/* LEFT */}
+            {/* LOGO */}
 
             <div
                onClick={() => navigate("/")}
                className="
-                  flex items-center gap-2
+                  flex items-center gap-3
                   cursor-pointer
                "
             >
 
                <div
                   className="
-                     h-9 w-9 rounded-2xl
+                     h-10 w-10 rounded-2xl
 
-                     bg-black text-white
-                     dark:bg-white dark:text-black
+                     bg-black dark:bg-white
+
+                     text-white dark:text-black
 
                      flex items-center justify-center
 
-                     font-bold text-sm
+                     font-bold
                   "
                >
                   BK
@@ -108,12 +150,13 @@ function Navbar() {
                <h1
                   className="
                      text-lg md:text-xl
+
                      font-bold
 
                      text-black dark:text-white
                   "
                >
-                  Baat Karo
+                  BaatKaro
                </h1>
 
             </div>
@@ -133,47 +176,35 @@ function Navbar() {
 
                      <button
                         onClick={() => navigate("/friends")}
-                        className={`
-                           flex items-center gap-2
-
-                           px-4 py-2 rounded-xl
-
-                           transition
-
-                           ${
-                              isActive("/friends")
-                                 ? "bg-black text-white dark:bg-white dark:text-black"
-                                 : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
-                           }
-                        `}
+                        className={navBtn(
+                           location.pathname === "/friends"
+                        )}
                      >
 
-                        <Users size={18} />
+                        <div className="flex items-center gap-2">
 
-                        Friends
+                           <Users size={18} />
+
+                           Friends
+
+                        </div>
 
                      </button>
 
                      <button
                         onClick={() => navigate("/chat")}
-                        className={`
-                           flex items-center gap-2
-
-                           px-4 py-2 rounded-xl
-
-                           transition
-
-                           ${
-                              isActive("/chat")
-                                 ? "bg-black text-white dark:bg-white dark:text-black"
-                                 : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
-                           }
-                        `}
+                        className={navBtn(
+                           location.pathname === "/chat"
+                        )}
                      >
 
-                        <MessageCircle size={18} />
+                        <div className="flex items-center gap-2">
 
-                        Chats
+                           <MessageCircle size={18} />
+
+                           Chats
+
+                        </div>
 
                      </button>
 
@@ -181,11 +212,41 @@ function Navbar() {
 
                )}
 
-               <ThemeButton />
+               {/* THEME BUTTON */}
+
+               <button
+                  onClick={toggleTheme}
+                  className="
+                     h-10 w-10 rounded-xl
+
+                     flex items-center justify-center
+
+                     bg-zinc-100 dark:bg-zinc-900
+
+                     text-black dark:text-white
+
+                     transition
+                  "
+               >
+
+                  {
+                     darkMode
+                        ? <Sun size={18} />
+                        : <Moon size={18} />
+                  }
+
+               </button>
+
+               {/* USER */}
 
                {status ? (
 
-                  <>
+                  <div
+                     className="
+                        flex items-center gap-3
+                        ml-2
+                     "
+                  >
 
                      <div
                         className="
@@ -195,43 +256,45 @@ function Navbar() {
 
                            flex items-center justify-center
 
-                           font-semibold
-                           uppercase
+                           uppercase font-semibold
 
                            text-black dark:text-white
                         "
                      >
+
                         {userData?.username?.charAt(0)}
+
                      </div>
 
                      <button
                         onClick={handleLogout}
                         className="
+                           text-sm font-medium
+
                            text-red-500
                            hover:text-red-600
-
-                           text-sm font-medium
                         "
                      >
                         Logout
                      </button>
 
-                  </>
+                  </div>
 
                ) : (
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
 
                      <button
                         onClick={() => navigate("/login")}
                         className="
-                           text-zinc-600
-                           dark:text-zinc-300
+                           px-4 py-2 rounded-xl
 
-                           hover:text-black
-                           dark:hover:text-white
+                           text-sm
 
-                           transition
+                           text-black dark:text-white
+
+                           hover:bg-zinc-100
+                           dark:hover:bg-zinc-900
                         "
                      >
                         Login
@@ -242,10 +305,11 @@ function Navbar() {
                         className="
                            px-4 py-2 rounded-xl
 
-                           bg-black text-white
+                           bg-black dark:bg-white
 
-                           dark:bg-white
-                           dark:text-black
+                           text-white dark:text-black
+
+                           text-sm font-medium
                         "
                      >
                         Sign Up
@@ -257,15 +321,14 @@ function Navbar() {
 
             </div>
 
-            {/* MOBILE MENU BUTTON */}
+            {/* MOBILE BUTTON */}
 
             <button
                onClick={() => setMenuOpen(!menuOpen)}
                className="
                   md:hidden
 
-                  text-black
-                  dark:text-white
+                  text-black dark:text-white
                "
             >
 
@@ -313,6 +376,8 @@ function Navbar() {
 
                               px-4 py-3 rounded-xl
 
+                              text-black dark:text-white
+
                               hover:bg-zinc-100
                               dark:hover:bg-zinc-900
                            "
@@ -333,6 +398,8 @@ function Navbar() {
                               flex items-center gap-3
 
                               px-4 py-3 rounded-xl
+
+                              text-black dark:text-white
 
                               hover:bg-zinc-100
                               dark:hover:bg-zinc-900
@@ -371,7 +438,10 @@ function Navbar() {
                            onClick={() => navigate("/login")}
                            className="
                               px-4 py-3 rounded-xl
+
                               text-left
+
+                              text-black dark:text-white
 
                               hover:bg-zinc-100
                               dark:hover:bg-zinc-900
@@ -385,10 +455,9 @@ function Navbar() {
                            className="
                               px-4 py-3 rounded-xl
 
-                              bg-black text-white
+                              bg-black dark:bg-white
 
-                              dark:bg-white
-                              dark:text-black
+                              text-white dark:text-black
                            "
                         >
                            Sign Up
@@ -398,9 +467,32 @@ function Navbar() {
 
                   )}
 
-                  <div className="pt-2">
-                     <ThemeButton />
-                  </div>
+                  {/* MOBILE THEME */}
+
+                  <button
+                     onClick={toggleTheme}
+                     className="
+                        mt-2
+
+                        h-12 rounded-xl
+
+                        bg-zinc-100 dark:bg-zinc-900
+
+                        flex items-center justify-center gap-2
+
+                        text-black dark:text-white
+                     "
+                  >
+
+                     {
+                        darkMode
+                           ? <Sun size={18} />
+                           : <Moon size={18} />
+                     }
+
+                     Theme
+
+                  </button>
 
                </div>
 
