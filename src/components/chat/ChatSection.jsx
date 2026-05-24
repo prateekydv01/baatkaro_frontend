@@ -1,11 +1,9 @@
-// ChatSection.jsx
-
 import React,{useState,useEffect,useRef} from "react";
 import { sendMessage,getMessages,deleteMessage } from "../../../api/chat";
 import { useSelector } from "react-redux";
 import { socket } from "../../socket/socket";
 
-function ChatSection({friend}) {
+function ChatSection({friend,setSelectedFriend}) {
 
    const user=
       useSelector(
@@ -337,19 +335,27 @@ function ChatSection({friend}) {
    return (
       <div className="flex flex-col flex-1 h-full overflow-hidden bg-zinc-50 dark:bg-black">
 
-         <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black flex items-center gap-4 shadow-sm">
+         {/* Header */}
+         <div className="px-4 md:px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black flex items-center gap-3 shadow-sm">
 
-            <div className="h-12 w-12 rounded-full bg-zinc-300 dark:bg-zinc-700 flex items-center justify-center text-lg font-bold uppercase text-black dark:text-white">
+            <button
+               onClick={()=>setSelectedFriend(null)}
+               className="md:hidden text-black dark:text-white text-2xl"
+            >
+               ←
+            </button>
+
+            <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-zinc-300 dark:bg-zinc-700 flex items-center justify-center text-base md:text-lg font-bold uppercase text-black dark:text-white">
                {friend?.username?.charAt(0)}
             </div>
 
-            <div>
+            <div className="min-w-0">
 
-               <h2 className="text-lg font-semibold text-black dark:text-white">
+               <h2 className="text-base md:text-lg font-semibold text-black dark:text-white truncate">
                   {friend?.username}
                </h2>
 
-               <p className={`text-sm ${
+               <p className={`text-xs md:text-sm ${
                   isTyping
                      ?"text-blue-500"
                      :(
@@ -375,7 +381,8 @@ function ChatSection({friend}) {
 
          </div>
 
-         <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-4">
+         {/* Messages */}
+         <div className="flex-1 overflow-y-auto px-3 md:px-6 py-4 flex flex-col gap-4">
 
             {
                loading ? (
@@ -401,7 +408,7 @@ function ChatSection({friend}) {
                            }`}
                         >
 
-                           <div className="group flex flex-col max-w-[75%]">
+                           <div className="group flex flex-col max-w-[85%] md:max-w-[75%]">
 
                               <div className={`px-4 py-3 rounded-3xl text-sm shadow-sm break-words ${
                                  isSender
@@ -460,7 +467,8 @@ function ChatSection({friend}) {
 
          </div>
 
-         <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black flex items-center gap-3">
+         {/* Input */}
+         <div className="p-3 md:p-4 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black flex items-center gap-2 md:gap-3">
 
             <input
                type="text"
@@ -478,12 +486,12 @@ function ChatSection({friend}) {
                   }
 
                }}
-               className="flex-1 rounded-2xl px-5 py-3 border border-zinc-300 bg-white text-black outline-none dark:bg-zinc-900 dark:border-zinc-700 dark:text-white"
+               className="flex-1 rounded-2xl px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base border border-zinc-300 bg-white text-black outline-none dark:bg-zinc-900 dark:border-zinc-700 dark:text-white"
             />
 
             <button
                onClick={handleSendMessage}
-               className="px-6 py-3 rounded-2xl bg-black hover:bg-zinc-800 text-white dark:bg-white dark:text-black dark:hover:bg-zinc-200 transition"
+               className="px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base rounded-2xl bg-black hover:bg-zinc-800 text-white dark:bg-white dark:text-black dark:hover:bg-zinc-200 transition"
             >
                Send
             </button>

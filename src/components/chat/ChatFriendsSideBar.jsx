@@ -1,5 +1,3 @@
-// ChatFriendsSideBar.jsx
-
 import React,{useState,useEffect} from "react";
 import { getConnections } from "../../../api/request";
 import { socket } from "../../socket/socket";
@@ -168,11 +166,18 @@ function ChatFriendsSideBar({selectedFriend,setSelectedFriend}) {
    },[]);
 
    return (
-      <div className="w-full md:w-[350px] h-full bg-white dark:bg-black border-r border-zinc-200 dark:border-zinc-800 flex flex-col">
+      <div className="w-screen md:w-[350px] h-full bg-white dark:bg-black border-r border-zinc-200 dark:border-zinc-800 flex flex-col">
 
-         <div className="p-5 border-b border-zinc-200 dark:border-zinc-800">
-            <h1 className="text-2xl font-bold text-black dark:text-white">Chats</h1>
-            <p className="text-sm text-zinc-500 mt-1">Your Connections</p>
+         <div className="p-4 md:p-5 border-b border-zinc-200 dark:border-zinc-800">
+
+            <h1 className="text-xl md:text-2xl font-bold text-black dark:text-white">
+               Chats
+            </h1>
+
+            <p className="text-xs md:text-sm text-zinc-500 mt-1">
+               Your Connections
+            </p>
+
          </div>
 
          {loading&&(
@@ -201,14 +206,14 @@ function ChatFriendsSideBar({selectedFriend,setSelectedFriend}) {
                      <div
                         key={friend._id}
                         onClick={()=>setSelectedFriend(friend)}
-                        className={`flex items-center gap-3 p-3 rounded-2xl cursor-pointer transition-all duration-200 ${
+                        className={`flex items-center gap-3 p-2.5 md:p-3 rounded-2xl cursor-pointer transition-all duration-200 ${
                            selectedFriend?._id===friend._id
                               ?"bg-zinc-200 dark:bg-zinc-800"
                               :"hover:bg-zinc-100 dark:hover:bg-zinc-900"
                         }`}
                      >
 
-                        <div className="w-12 h-12 rounded-full bg-zinc-300 dark:bg-zinc-700 flex items-center justify-center text-lg font-semibold text-black dark:text-white uppercase">
+                        <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-zinc-300 dark:bg-zinc-700 flex items-center justify-center text-base md:text-lg font-semibold text-black dark:text-white uppercase">
                            {friend.username?.charAt(0)}
                         </div>
 
@@ -216,19 +221,19 @@ function ChatFriendsSideBar({selectedFriend,setSelectedFriend}) {
 
                            <div className="flex items-center justify-between gap-2">
 
-                              <h2 className="font-semibold text-black dark:text-white truncate">
+                              <h2 className="font-semibold text-sm md:text-base text-black dark:text-white truncate">
                                  {friend.username}
                               </h2>
 
                               {friend.lastMessageTime&&(
-                                 <span className="text-xs text-zinc-500 shrink-0">
+                                 <span className="text-[10px] md:text-xs text-zinc-500 shrink-0">
                                     {formatMessageTime(friend.lastMessageTime)}
                                  </span>
                               )}
 
                            </div>
 
-                           <p className="text-sm text-zinc-500 truncate">
+                           <p className="text-xs md:text-sm text-zinc-500 truncate">
                               {
                                  typingUsers.includes(friend._id)
                                     ?"Typing..."

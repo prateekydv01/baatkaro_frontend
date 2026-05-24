@@ -6,53 +6,74 @@ import ChatSection from "../components/chat/ChatSection";
 
 function ChatPage() {
 
-  const [selectedFriend, setSelectedFriend] =
-    useState(null);
+   const [selectedFriend, setSelectedFriend] =
+      useState(null);
 
-  return (
+   return (
 
-    <div className="h-screen flex flex-col bg-white dark:bg-black overflow-hidden">
+      <div className="h-[100dvh] bg-white dark:bg-black flex flex-col overflow-hidden">
 
-      {/* Navbar */}
-      <Navbar />
+         {/* Navbar */}
+         <div className="shrink-0">
+            <Navbar />
+         </div>
 
-      {/* Main */}
-      <div className="flex flex-1 overflow-hidden ">
+         {/* Main */}
+         <div className="flex-1 flex overflow-hidden relative">
 
-        {/* Sidebar */}
-        <ChatFriendsSideBar
-          selectedFriend={selectedFriend}
-          setSelectedFriend={setSelectedFriend}
-        />
+            {/* Sidebar */}
+            <div
+               className={`
+                  ${selectedFriend ? "hidden md:flex" : "flex"}
+                  w-full md:w-[350px]
+                  h-full
+               `}
+            >
 
-        {/* Chat Section */}
-        {
-          selectedFriend ? (
-
-            <ChatSection
-              friend={selectedFriend}
-            />
-
-          ) : (
-
-            <div className="flex-1 flex items-center justify-center bg-zinc-50 dark:bg-black">
-
-              <p className="text-zinc-500 text-lg">
-
-                Select a chat
-
-              </p>
+               <ChatFriendsSideBar
+                  selectedFriend={selectedFriend}
+                  setSelectedFriend={setSelectedFriend}
+               />
 
             </div>
 
-          )
-        }
+            {/* Chat Section */}
+            <div
+               className={`
+                  ${selectedFriend ? "flex" : "hidden md:flex"}
+                  flex-1
+                  h-full
+               `}
+            >
+
+               {
+                  selectedFriend ? (
+
+                     <ChatSection
+                        friend={selectedFriend}
+                        setSelectedFriend={setSelectedFriend}
+                     />
+
+                  ) : (
+
+                     <div className="flex-1 hidden md:flex items-center justify-center bg-zinc-50 dark:bg-black">
+
+                        <p className="text-zinc-500 text-lg">
+                           Select a chat
+                        </p>
+
+                     </div>
+
+                  )
+               }
+
+            </div>
+
+         </div>
 
       </div>
 
-    </div>
-
-  );
+   );
 
 }
 
