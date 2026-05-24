@@ -1,49 +1,59 @@
-import React,{useState,useEffect} from 'react'
-import {io} from 'socket.io-client'
+import React, { useState } from "react";
 
-const socket = io('http://localhost:4000')
+import Navbar from "../components/navbar/Navbar";
+import ChatFriendsSideBar from "../components/chat/ChatFriendsSideBar";
+import ChatSection from "../components/chat/ChatSection";
 
 function ChatPage() {
-  const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState([])
 
-  const sendMsg = () => {
-
-    socket.emit("message", message)
-    setMessage("")
-  }
-
-  useEffect(() => {
-
-    socket.on("receive-message", (msg) => {
-
-      setMessages((prev) => [...prev, msg])
-    })
-
-    return () => {
-      socket.off("receive-message")
-    }
-
-  }, [])
-
+  const [selectedFriend, setSelectedFriend] =
+    useState(null);
 
   return (
-    <div>
-      <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Enter message'/>
-      <button 
-        onClick={sendMsg}
-      >Send</button>
 
-      <div>
+    <div className="h-screen flex flex-col bg-white dark:bg-black overflow-hidden">
+
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Main */}
+      <div className="flex flex-1 overflow-hidden ">
+
+        {/* Sidebar */}
+        <ChatFriendsSideBar
+          selectedFriend={selectedFriend}
+          setSelectedFriend={setSelectedFriend}
+        />
+
+        {/* Chat Section */}
         {
-          messages.map((msg, index) => (
-            <p key={index}>{msg}</p>
-          ))
+          selectedFriend ? (
+
+            <ChatSection
+              friend={selectedFriend}
+            />
+
+          ) : (
+
+            <div className="flex-1 flex items-center justify-center bg-zinc-50 dark:bg-black">
+
+              <p className="text-zinc-500 text-lg">
+
+                Select a chat
+
+              </p>
+
+            </div>
+
+          )
         }
+
       </div>
+
     </div>
-    
-  )
+
+  );
+
 }
 
-export default ChatPage
+export default ChatPage;

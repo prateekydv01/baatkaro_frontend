@@ -21,6 +21,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import MyFriendsPage from "./pages/MyFriendsPage.jsx";
+import ChatPage from "./pages/ChatPage.jsx";
 
 
 const router = createBrowserRouter(
@@ -55,6 +56,14 @@ const router = createBrowserRouter(
         element={
           <AuthLayout authentication={true}>
             <MyFriendsPage />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="chat"
+        element={
+          <AuthLayout authentication={true}>
+            <ChatPage />
           </AuthLayout>
         }
       />

@@ -109,8 +109,26 @@ function Navbar() {
                                         hover:scale-105
                                         transition
                                     '
+                                    onClick={()=>{navigate('/friends')}}
                                 >
-                                    Open Chat
+                                    Friends
+                                </button>
+
+                                <button
+                                    className='
+                                        px-5 py-2 rounded-xl font-semibold
+
+                                        bg-black text-white
+
+                                        dark:bg-white
+                                        dark:text-black
+
+                                        hover:scale-105
+                                        transition
+                                    '
+                                    onClick={()=>{navigate('/chat')}}
+                                >
+                                Chat
                                 </button>
 
                                 <button

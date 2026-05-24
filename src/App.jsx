@@ -1,71 +1,100 @@
-import { useState ,useEffect} from 'react'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useLocation } from "react-router-dom"
-import {getCurrentUser} from "../api/auth.js"
+import { Outlet } from "react-router-dom";
+import { getCurrentUser } from "../api/auth.js";
 import { login, logout } from "./store/authSlice.js";
 import { socket } from "./socket/socket.js";
 
 function App() {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
-  const location = useLocation();
-  const authStatus = useSelector((state) => state.auth.status);
-  const { theme } = useSelector((state) => state.theme);
-  const user = useSelector(
-   (state) => state.auth.userData
-);
 
-  useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [theme]);
+   const dispatch = useDispatch();
 
+   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-      getCurrentUser()
-        .then((res) => {
-          if (res?.data?.user) {
-            dispatch(login({ userData: res.data.user }));
-          } else {
-            dispatch(logout());
-          }
-        })
-        .catch(() => dispatch(logout()))
-        .finally(() => setLoading(false));
-    }, [dispatch]);
+   const { theme } = useSelector(
+      (state) => state.theme
+   );
 
-    useEffect(() => {
+   const user = useSelector(
+      (state) => state.auth.userData
+   );
 
-      if(user?._id){
+   useEffect(() => {
 
-        socket.io.opts.query = {
-          userId:user._id
-        }
-
-        socket.connect()
+      if (theme === "dark") {
+         document.documentElement.classList.add("dark");
+      } else {
+         document.documentElement.classList.remove("dark");
       }
 
-      return ()=> socket.disconnect()
+   }, [theme]);
 
-    },[user])
+   useEffect(() => {
 
-    if (loading) {
+      getCurrentUser()
+
+         .then((res) => {
+
+            if (res?.data?.user) {
+
+               dispatch(login({
+                  userData: res.data.user
+               }));
+
+            } else {
+
+               dispatch(logout());
+
+            }
+
+         })
+
+         .catch(() => dispatch(logout()))
+
+         .finally(() => setLoading(false));
+
+   }, [dispatch]);
+
+   useEffect(() => {
+
+      if (user?._id) {
+
+         // IMPORTANT
+         socket.disconnect();
+
+         socket.io.opts.query = {
+            userId: user._id
+         };
+
+         socket.connect();
+
+      }
+
+   }, [user]);
+
+   useEffect(() => {
+
+      if (!user && socket.connected) {
+         socket.disconnect();
+      }
+
+   }, [user]);
+
+   if (loading) {
       return (
-        <div>
-          Loading...
-        </div>
+         <div>
+            Loading...
+         </div>
       );
-    }
-    
-  return (
-    <>
-     <Outlet />
-    </>
-  )
+   }
+
+   return (
+      <>
+         <Outlet />
+      </>
+   );
+
 }
 
-export default App
+export default App;

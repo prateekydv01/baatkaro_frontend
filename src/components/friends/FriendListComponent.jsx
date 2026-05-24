@@ -8,11 +8,6 @@ function FriendsList() {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  console.log(friends)
-
-  useEffect(() => {
-    fetchFriends();
-  }, []);
 
   const fetchFriends = async () => {
 
@@ -22,7 +17,6 @@ function FriendsList() {
       setError("");
 
       const res = await getConnections();
-        console.log(res)
       setFriends(res.data.users);
 
     } catch (error) {
@@ -40,6 +34,10 @@ function FriendsList() {
 
     }
   };
+
+  useEffect(() => {
+    fetchFriends();
+  }, []);
 
     const handleRemove = async (
       friendId
