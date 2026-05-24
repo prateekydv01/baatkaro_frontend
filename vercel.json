@@ -1,17 +1,16 @@
 {
   "rewrites": [
-    { "handle": "filesystem" },
     {
-      "src": "^/api/(.*)",
-      "dest": "https://baatkaro-backend.onrender.com/api/$1"
+      "source": "/api/:path*",
+      "destination": "https://baatkaro-backend.onrender.com/api/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/socket.io/:path*",
+      "destination": "https://baatkaro-backend.onrender.com/socket.io/:path*"
+    },
+    {
+      "source": "/:path*",
       "destination": "/"
-    },
-    {
-      "source": "/socket.io/(.*)",
-      "destination": "https://baatkaro-backend.onrender.com/socket.io/$1"
     }
   ]
 }
