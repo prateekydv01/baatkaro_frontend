@@ -10,7 +10,8 @@ import {
    MessageCircle,
    Users,
    Moon,
-   Sun
+   Sun,
+   Bell
 } from "lucide-react";
 
 function Navbar() {
@@ -25,6 +26,15 @@ function Navbar() {
    const { status, userData } = useSelector(
       (state) => state.auth
    );
+
+   const { notifications } = useSelector(
+   (state) => state.notification
+);
+
+const unreadCount =
+   notifications.filter(
+      (n)=>!n.isRead
+   ).length;
 
    useEffect(() => {
 
@@ -190,6 +200,7 @@ function Navbar() {
                         </div>
 
                      </button>
+                     
 
                      <button
                         onClick={() => navigate("/chat")}
@@ -207,6 +218,62 @@ function Navbar() {
                         </div>
 
                      </button>
+
+                     <button
+   onClick={() => navigate("/notifications")}
+   className={navBtn(
+      location.pathname === "/notifications"
+   )}
+>
+
+   <div className="relative flex items-center gap-2">
+
+      <Bell size={18} />
+
+
+      {
+         unreadCount > 0 && (
+
+            <span
+               className="
+                  absolute
+                  -top-2
+                  -right-3
+
+                  min-w-[18px]
+                  h-[18px]
+
+                  px-1
+
+                  rounded-full
+
+                  bg-red-500
+
+                  text-white
+
+                  text-[10px]
+                  font-bold
+
+                  flex
+                  items-center
+                  justify-center
+               "
+            >
+
+               {
+                  unreadCount > 99
+                     ? "99+"
+                     : unreadCount
+               }
+
+            </span>
+
+         )
+      }
+
+   </div>
+
+</button>
 
                   </>
 
@@ -411,6 +478,66 @@ function Navbar() {
                            Chats
 
                         </button>
+                        <button
+   onClick={() => {
+      navigate("/notifications");
+      setMenuOpen(false);
+   }}
+   className="
+      flex items-center justify-between
+
+      px-4 py-3 rounded-xl
+
+      text-black dark:text-white
+
+      hover:bg-zinc-100
+      dark:hover:bg-zinc-900
+   "
+>
+
+   <div className="flex items-center gap-3">
+
+      <Bell size={18} />
+
+      Notifications
+
+   </div>
+
+   {
+      unreadCount > 0 && (
+
+         <span
+            className="
+               min-w-[20px]
+               h-[20px]
+
+               px-1
+
+               rounded-full
+
+               bg-red-500
+
+               text-white
+
+               text-[11px]
+               font-bold
+
+               flex items-center justify-center
+            "
+         >
+
+            {
+               unreadCount > 99
+                  ? "99+"
+                  : unreadCount
+            }
+
+         </span>
+
+      )
+   }
+
+</button>
 
                         <button
                            onClick={handleLogout}

@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 
 import App from "./App.jsx";
+import { Toaster } from "react-hot-toast";
 
 import store from "./store/store.js";
 
@@ -22,6 +23,7 @@ import SignUpPage from "./pages/SignupPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import MyFriendsPage from "./pages/MyFriendsPage.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
+import NotificationPage from "./pages/NotificationPage.jsx";
 
 
 const router = createBrowserRouter(
@@ -67,6 +69,22 @@ const router = createBrowserRouter(
           </AuthLayout>
         }
       />
+      <Route
+        path="notifications"
+        element={
+          <AuthLayout authentication={true}>
+            <NotificationPage />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/chat/:id"
+        element={
+          <AuthLayout authentication={true}>
+            <ChatPage />
+          </AuthLayout>
+        }
+      />
 
     </Route>
   )
@@ -76,6 +94,10 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
+       <Toaster
+         position="top-center"
+         
+      />
     </Provider>
   </StrictMode>
 );

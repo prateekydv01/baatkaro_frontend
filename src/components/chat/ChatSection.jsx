@@ -2,14 +2,12 @@ import React,{useState,useEffect,useRef} from "react";
 import { sendMessage,getMessages,deleteMessage } from "../../../api/chat";
 import { useSelector } from "react-redux";
 import { socket } from "../../socket/socket";
+import { useNavigate } from "react-router-dom";
 
 function ChatSection({friend,setSelectedFriend}) {
 
-   const user=
-      useSelector(
-         (state)=>state.auth.userData
-      );
-
+   const navigate = useNavigate();
+   const user= useSelector((state)=>state.auth.userData);
    const [messages,setMessages]=useState([]);
    const [text,setText]=useState("");
    const [loading,setLoading]=useState(false);
@@ -17,8 +15,7 @@ function ChatSection({friend,setSelectedFriend}) {
    const [lastSeen,setLastSeen]=useState(friend?.lastSeen);
    const [isTyping,setIsTyping]=useState(false);
 
-   const messagesEndRef=
-      useRef();
+   const messagesEndRef = useRef();
 
    const formatLastSeen=(lastSeen)=>{
 
@@ -66,14 +63,11 @@ function ChatSection({friend,setSelectedFriend}) {
 
    };
 
-   useEffect(()=>{
-
-      if(friend?._id){
+   useEffect(()=>{ if(friend?._id){
          fetchMessages();
       }
 
       setLastSeen(friend?.lastSeen);
-
    },[friend]);
 
    useEffect(()=>{
@@ -81,17 +75,13 @@ function ChatSection({friend,setSelectedFriend}) {
       socket.emit(
          "get-online-users"
       );
-
       socket.on("online-users",(users)=>{
-
          setIsOnline(
             users.includes(friend?._id)
          );
-
       });
 
       socket.on("user-online",(userId)=>{
-
          if(userId===friend?._id){
             setIsOnline(true);
          }
@@ -99,15 +89,11 @@ function ChatSection({friend,setSelectedFriend}) {
       });
 
       socket.on("user-offline",(data)=>{
-
          if(data.userId===friend?._id){
-
             setIsOnline(false);
-
             setLastSeen(
                data.lastSeen
             );
-
          }
 
       });
@@ -126,65 +112,31 @@ function ChatSection({friend,setSelectedFriend}) {
       });
 
       socket.on("stop-typing",(senderId)=>{
-
-         if(
-            senderId.toString()===
-            friend?._id.toString()
-         ){
-
+         if(senderId.toString()===friend?._id.toString()){
             setIsTyping(false);
-
          }
-
       });
 
       socket.on("receiveMessage",(message)=>{
-
          if(
-            (
-               message.senderId?._id===
-                  friend?._id &&
-               message.receiverId?._id===
-                  user?._id
-            ) ||
-            (
-               message.receiverId?._id===
-                  friend?._id &&
-               message.senderId?._id===
-                  user?._id
-            )
+            ( message.senderId?._id=== friend?._id && message.receiverId?._id=== user?._id) ||
+            (message.receiverId?._id === friend?._id && message.senderId?._id===user?._id)
          ){
 
             setMessages((prev)=>{
 
-               const exists=
-                  prev.some(
-                     (msg)=>
-                        msg._id===
-                        message._id
-                  );
+               const exists= prev.some((msg)=> msg._id=== message._id);
+               if(exists) return prev;
 
-               if(exists)
-                  return prev;
-
-               return [
-                  ...prev,
-                  message
-               ];
-
+               return [ ...prev, message ];
             });
-
          }
-
       });
 
       socket.on("messageDeleted",(data)=>{
 
-         setMessages((prev)=>
-            prev.filter(
-               (msg)=>
-                  msg._id!==
-                  data.messageId
+         setMessages((prev)=> prev.filter(
+               (msg)=> msg._id!== data.messageId
             )
          );
 
@@ -206,46 +158,75 @@ function ChatSection({friend,setSelectedFriend}) {
 
    useEffect(()=>{
 
+   if(
+      user?._id &&
+      friend?._id
+   ){
+
+      socket.emit(
+
+         "join-chat",
+
+         {
+
+            userId:user._id,
+
+            friendId:friend._id
+
+         }
+
+      );
+
+      
+
+   }
+
+   return ()=>{
+
+      if(user?._id){
+
+         socket.emit(
+
+            "leave-chat",
+
+            user._id
+
+         );
+
+      
+      }
+
+   };
+
+},[
+   user?._id,
+   friend?._id
+]);
+
+   useEffect(()=>{
+
       messagesEndRef.current?.scrollIntoView({
          behavior:"smooth"
       });
 
    },[messages]);
 
-   const fetchMessages=
-      async()=>{
-
-         try{
-
-            setLoading(true);
-
-            const res=
-               await getMessages(
-                  friend._id
-               );
-
-            setMessages(
-               res.data.messages
-            );
-
+   const fetchMessages = async()=>{
+      try{
+         setLoading(true);
+         const res = await getMessages(friend._id);
+         setMessages( res.data.messages);
          }catch(error){
-
             console.log(error);
-
          }finally{
-
             setLoading(false);
-
          }
-
       };
 
    let typingTimeout;
 
    const handleTyping=(value)=>{
-
       setText(value);
-
       socket.emit("typing",{
          senderId:user._id,
          receiverId:friend._id
@@ -270,24 +251,13 @@ function ChatSection({friend,setSelectedFriend}) {
 
    };
 
-   const handleSendMessage=
-      async()=>{
-
-         if(
-            !text.trim() ||
-            !friend?._id
-         ) return;
+   const handleSendMessage= async()=>{
+         if( !text.trim() || !friend?._id) return;
 
          try{
-
-            const messageText=
-               text;
-
+            const messageText=text;
             setText("");
-
-            socket.emit(
-               "stop-typing",
-               {
+            socket.emit("stop-typing",{
                   senderId:user._id,
                   receiverId:friend._id
                }
@@ -295,17 +265,12 @@ function ChatSection({friend,setSelectedFriend}) {
 
             await sendMessage(
                friend._id,
-               {
-                  text:messageText
-               }
+               {  text:messageText }
             );
 
          }catch(error){
-
             console.log(error);
-
          }
-
       };
 
    const handleDeleteMessage=
@@ -339,7 +304,7 @@ function ChatSection({friend,setSelectedFriend}) {
          <div className="px-4 md:px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black flex items-center gap-3 shadow-sm">
 
             <button
-               onClick={()=>setSelectedFriend(null)}
+              onClick={()=>navigate("/chat")}
                className="md:hidden text-black dark:text-white text-2xl"
             >
                ←

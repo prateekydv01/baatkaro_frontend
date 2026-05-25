@@ -1,8 +1,10 @@
 import React,{useState,useEffect} from "react";
 import { getConnections } from "../../../api/request";
 import { socket } from "../../socket/socket";
+import { useNavigate } from "react-router-dom";
 
 function ChatFriendsSideBar({selectedFriend,setSelectedFriend}) {
+   const navigate = useNavigate()
 
    const [friends,setFriends]=useState([]);
    const [loading,setLoading]=useState(false);
@@ -205,7 +207,7 @@ function ChatFriendsSideBar({selectedFriend,setSelectedFriend}) {
                   friends.map((friend)=>(
                      <div
                         key={friend._id}
-                        onClick={()=>setSelectedFriend(friend)}
+                        onClick={()=>navigate(`/chat/${friend._id}`)}
                         className={`flex items-center gap-3 p-2.5 md:p-3 rounded-2xl cursor-pointer transition-all duration-200 ${
                            selectedFriend?._id===friend._id
                               ?"bg-zinc-200 dark:bg-zinc-800"

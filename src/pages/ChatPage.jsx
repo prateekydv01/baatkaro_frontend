@@ -1,34 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import Navbar from "../components/navbar/Navbar";
 import ChatFriendsSideBar from "../components/chat/ChatFriendsSideBar";
 import ChatSection from "../components/chat/ChatSection";
 
+import { getConnections } from "../../api/request";
+
 function ChatPage() {
 
-   const [selectedFriend, setSelectedFriend] =
-      useState(null);
+   const { id } = useParams();
+
+   const [selectedFriend, setSelectedFriend] = useState(null);
+
+   useEffect(()=>{
+
+      const fetchFriend = async()=>{
+
+         try{
+
+            const res = await getConnections();
+
+            const friend = res.data.users.find(
+               (u)=>u._id === id
+            );
+
+            setSelectedFriend(friend || null);
+
+         }catch(error){
+
+            console.log(error);
+
+         }
+
+      };
+
+      if(id){
+         fetchFriend();
+      }else{
+         setSelectedFriend(null);
+      }
+
+   },[id]);
 
    return (
 
       <div className="h-[100dvh] bg-white dark:bg-black flex flex-col overflow-hidden">
 
-         {/* Navbar */}
          <div className="shrink-0">
             <Navbar />
          </div>
 
-         {/* Main */}
          <div className="flex-1 flex overflow-hidden relative">
 
-            {/* Sidebar */}
-            <div
-               className={`
-                  ${selectedFriend ? "hidden md:flex" : "flex"}
-                  w-full md:w-[350px]
-                  h-full
-               `}
-            >
+            <div className={`${selectedFriend ? "hidden md:flex" : "flex"} w-full md:w-[350px] h-full`}>
 
                <ChatFriendsSideBar
                   selectedFriend={selectedFriend}
@@ -37,14 +62,7 @@ function ChatPage() {
 
             </div>
 
-            {/* Chat Section */}
-            <div
-               className={`
-                  ${selectedFriend ? "flex" : "hidden md:flex"}
-                  flex-1
-                  h-full
-               `}
-            >
+            <div className={`${selectedFriend ? "flex" : "hidden md:flex"} flex-1 h-full`}>
 
                {
                   selectedFriend ? (
