@@ -309,10 +309,11 @@ function ChatSection({friend,setSelectedFriend}) {
             >
                ←
             </button>
-
+            <button onClick={()=>{navigate(`/profile/${friend._id}`)}}>
             <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-zinc-300 dark:bg-zinc-700 flex items-center justify-center text-base md:text-lg font-bold uppercase text-black dark:text-white">
                {friend?.username?.charAt(0)}
             </div>
+            </button>
 
             <div className="min-w-0">
 

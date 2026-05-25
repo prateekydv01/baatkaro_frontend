@@ -24,6 +24,8 @@ import HomePage from "./pages/HomePage.jsx";
 import MyFriendsPage from "./pages/MyFriendsPage.jsx";
 import ChatPage from "./pages/ChatPage.jsx";
 import NotificationPage from "./pages/NotificationPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
+import UserProfilePage from "./pages/UserProfilePage.jsx";
 
 
 const router = createBrowserRouter(
@@ -82,6 +84,22 @@ const router = createBrowserRouter(
         element={
           <AuthLayout authentication={true}>
             <ChatPage />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <AuthLayout authentication={true}>
+            <ProfilePage />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/profile/:id"
+        element={
+          <AuthLayout authentication={true}>
+            <UserProfilePage />
           </AuthLayout>
         }
       />

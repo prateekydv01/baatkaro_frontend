@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { socket } from "../../socket/socket";
 import { getConnections } from "../../../api/request";
 import { removeFriend } from "../../../api/request";
+import { useNavigate } from "react-router-dom";
 
 function FriendsList() {
 
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate=useNavigate()
 
   const fetchFriends = async () => {
 
@@ -158,10 +160,11 @@ function FriendsList() {
 
                 {/* User Info */}
                 <div className="flex items-center gap-4">
-
+                  <button onClick={()=>{navigate(`/profile/${friend._id}`)}}>
                   <div className="h-14 w-14 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center text-xl font-bold text-black dark:text-white uppercase">
                     {friend.username?.charAt(0)}
                   </div>
+                  </button>
 
                   <div>
 

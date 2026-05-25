@@ -1,283 +1,212 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import {useDispatch,useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import Navbar from "../components/navbar/Navbar";
+import {markNotificationRead} from "../../api/notification";
+import {markNotificationRead as markRead,removeNotification} from "../store/notificationSlice";
+import {deleteNotification} from "../../api/notification";
+import {Trash2,BellRing} from "lucide-react";
 
-import {
-   markNotificationRead
-} from "../../api/notification";
+function NotificationPage(){
 
-import {
-   markNotificationRead as markRead,
-   removeNotification
-} from "../store/notificationSlice";
+const dispatch=useDispatch();
+const navigate=useNavigate();
 
-import {
-   deleteNotification
-} from "../../api/notification";
+const {notifications}=useSelector((state)=>state.notification);
 
-import { Trash2 } from "lucide-react";
+const handleNotificationClick=async(notification)=>{
 
-function NotificationPage() {
+try{
 
-   const dispatch = useDispatch();
-   const navigate = useNavigate();
+if(!notification.isRead){
 
-   const { notifications } = useSelector(
-      (state) => state.notification
-   );
+await markNotificationRead(notification._id);
 
-   const handleNotificationClick = async (
-      notification
-   ) => {
+dispatch(markRead(notification._id));
 
-      try {
+}
 
-         if (!notification.isRead) {
+if(notification.message==="sent you a message"){
 
-            await markNotificationRead(
-               notification._id
-            );
+navigate(`/chat/${notification.senderId._id}`);
 
-            dispatch(
-               markRead(notification._id)
-            );
+}else if(notification.message==="sent you a friend request"||notification.message==="accepted your friend request"||notification.message==="rejected your friend request"){
 
-         }
+navigate("/friends");
 
-         if (
-            notification.message ===
-            "sent you a message"
-         ) {
+}
 
-            navigate(
-               `/chat/${notification.senderId._id}`
-            );
+}catch(error){
 
-         }
+console.log(error);
 
-         else if (
+}
 
-            notification.message ===
-            "sent you a friend request"
+};
 
-            ||
+const handleDeleteNotification=async(id)=>{
 
-            notification.message ===
-            "accepted your friend request"
+try{
 
-            ||
+await deleteNotification(id);
 
-            notification.message ===
-            "rejected your friend request"
+dispatch(removeNotification(id));
 
-         ) {
+}catch(error){
 
-            navigate("/friends");
+console.log(error);
 
-         }
+}
 
-      } catch (error) {
+};
 
-         console.log(error);
+return(
 
-      }
+<div className="min-h-screen bg-zinc-100 dark:bg-black text-black dark:text-white transition-all duration-300">
 
-   };
+<Navbar/>
 
-   const handleDeleteNotification =
-   async(id)=>{
+<div className="max-w-3xl mx-auto px-3 md:px-5 pt-5 pb-24">
 
-      try{
+<div className="flex items-center justify-between mb-6 px-1">
 
-         await deleteNotification(id);
+<div className="flex items-center gap-3">
 
-         dispatch(
-            removeNotification(id)
-         );
+<div className="h-12 w-12 rounded-2xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center shadow-lg">
+<BellRing size={22}/>
+</div>
 
-      }catch(error){
+<div>
 
-         console.log(error);
+<h1 className="text-2xl md:text-3xl font-black tracking-tight text-black dark:text-white">
+Notifications
+</h1>
 
-      }
+<p className="text-sm text-zinc-500 dark:text-zinc-400">
+Stay updated with your activity
+</p>
 
-   };
+</div>
 
-   return (
+</div>
 
-      <div className="min-h-screen bg-zinc-50 dark:bg-black text-black dark:text-white transition-colors duration-300">
+<div className="px-3 py-2 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm font-semibold text-zinc-500 dark:text-zinc-400 shadow-sm">
+{notifications.length} Alerts
+</div>
 
-         <div className="max-w-2xl mx-auto border-x border-zinc-200 dark:border-zinc-800 min-h-screen bg-white dark:bg-black">
+</div>
 
-            {/* Header */}
+{notifications.length===0?(
+<div className="flex flex-col items-center justify-center h-[65vh] text-center">
 
-            <div className="sticky top-0 z-10 bg-white/90 dark:bg-black/90 backdrop-blur border-b border-zinc-200 dark:border-zinc-800 p-4">
+<div className="h-24 w-24 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center shadow-sm mb-5">
+<BellRing size={38} className="text-zinc-400"/>
+</div>
 
-               <h1 className="text-2xl font-bold">
-                  Notifications
-               </h1>
+<h2 className="text-2xl font-black text-black dark:text-white">
+No notifications
+</h2>
 
-            </div>
+<p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2">
+Your latest activity will appear here
+</p>
 
-            {/* Empty */}
+</div>
+):(
 
-            {
-               notifications.length === 0 ? (
+<div className="flex flex-col gap-3">
 
-                  <div className="flex justify-center items-center h-[80vh] text-zinc-500 dark:text-zinc-400">
+{notifications.map((notification)=>(
 
-                     No notifications
+<div
+key={notification._id}
+onClick={()=>handleNotificationClick(notification)}
+className={`group relative flex items-start gap-4 p-4 rounded-[28px] border backdrop-blur-xl cursor-pointer transition-all duration-200 hover:scale-[1.01] ${!notification.isRead?"bg-zinc-200/60 dark:bg-zinc-900/80 border-zinc-300 dark:border-zinc-700":"bg-white/70 dark:bg-zinc-950/70 border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 shadow-sm"}`}
+>
 
-                  </div>
+<div className="relative shrink-0">
 
-               ) : (
+<div className="h-12 w-12 rounded-full bg-black dark:bg-white text-white dark:text-black flex items-center justify-center text-sm font-black uppercase shadow-md">
 
-                  <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+{notification.senderId?.username?.charAt(0)}
 
-                     {
-                        notifications.map((notification) => (
+</div>
 
-                           <div
-                              key={notification._id}
+{!notification.isRead&&(
+<div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-blue-500 border-2 border-white dark:border-black"></div>
+)}
 
-                              onClick={() =>
-                                 handleNotificationClick(
-                                    notification
-                                 )
-                              }
+</div>
 
-                              className={`
-                                 group
-                                 p-4
-                                 cursor-pointer
-                                 transition-all
-                                 duration-200
-                                 hover:bg-zinc-100
-                                 dark:hover:bg-zinc-900
+<div className="flex-1 min-w-0">
 
-                                 ${
-                                    !notification.isRead
-                                       ? "bg-zinc-100 dark:bg-zinc-950"
-                                       : ""
-                                 }
-                              `}
-                           >
+<div className="flex items-start justify-between gap-3">
 
-                              <div className="flex items-start gap-3">
+<div className="min-w-0">
 
-                                 {/* Avatar */}
+<h2 className="text-[15px] font-bold text-black dark:text-white truncate">
+{notification.senderId?.username}
+</h2>
 
-                                 <div className="w-11 h-11 rounded-full bg-zinc-300 dark:bg-zinc-800 flex items-center justify-center text-sm font-bold uppercase text-black dark:text-white shrink-0">
+<p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 break-words leading-relaxed">
+{notification.message}
+</p>
 
-                                    {
-                                       notification.senderId
-                                          ?.username?.charAt(0)
-                                    }
+</div>
 
-                                 </div>
+<button
+onClick={(e)=>{
 
-                                 {/* Content */}
+e.stopPropagation();
 
-                                 <div className="flex-1 min-w-0">
+handleDeleteNotification(notification._id);
 
-                                    <div className="flex items-center justify-between gap-2">
+}}
+className="opacity-0 group-hover:opacity-100 h-9 w-9 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center justify-center text-zinc-400 hover:text-red-500 hover:border-red-200 dark:hover:border-red-900/40 transition-all duration-200 shrink-0"
+>
 
-                                       <div className="flex items-center gap-2">
+<Trash2 size={16}/>
 
-                                          <p className="font-semibold text-sm md:text-base truncate">
+</button>
 
-                                             {
-                                                notification.senderId
-                                                   ?.username
-                                             }
+</div>
 
-                                          </p>
+<div className="mt-3 flex items-center justify-between">
 
-                                          {
-                                             !notification.isRead && (
+<p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">
 
-                                                <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
+{new Date(notification.createdAt).toLocaleString([],{
+day:"numeric",
+month:"short",
+hour:"2-digit",
+minute:"2-digit"
+})}
 
-                                             )
-                                          }
+</p>
 
-                                       </div>
+{!notification.isRead&&(
+<div className="px-2 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 text-[10px] font-bold text-blue-500">
+NEW
+</div>
+)}
 
-                                       {/* Delete Button */}
+</div>
 
-                                       <button
+</div>
 
-                                          onClick={(e)=>{
+</div>
 
-                                             e.stopPropagation();
+))}
 
-                                             handleDeleteNotification(
-                                                notification._id
-                                             );
+</div>
 
-                                          }}
+)}
 
-                                          className="
-                                             opacity-0
-                                             group-hover:opacity-100
+</div>
 
-                                             transition
+</div>
 
-                                             text-zinc-400
-                                             hover:text-red-500
-
-                                             shrink-0
-                                          "
-                                       >
-
-                                          <Trash2 size={18} />
-
-                                       </button>
-
-                                    </div>
-
-                                    <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1 break-words">
-
-                                       {
-                                          notification.message
-                                       }
-
-                                    </p>
-
-                                    <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-2">
-
-                                       {
-                                          new Date(
-                                             notification.createdAt
-                                          ).toLocaleString([],{
-                                             day:"numeric",
-                                             month:"short",
-                                             hour:"2-digit",
-                                             minute:"2-digit"
-                                          })
-                                       }
-
-                                    </p>
-
-                                 </div>
-
-                              </div>
-
-                           </div>
-
-                        ))
-                     }
-
-                  </div>
-
-               )
-            }
-
-         </div>
-
-      </div>
-
-   );
+);
 
 }
 
