@@ -5,6 +5,6 @@ export const socket = io(
    {
       autoConnect: false,
       withCredentials: true,
-      transports: ["websocket"]
+      transports: ["polling","websocket"]
    }
 );
