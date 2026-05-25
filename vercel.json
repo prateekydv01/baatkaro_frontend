@@ -5,7 +5,7 @@
       "destination": "https://baatkaro-backend.onrender.com/api/:path*"
     },
     {
-      "source": "/socket.io/:path*",
+      "source": "/socket/socket.io/:path*",
       "destination": "https://baatkaro-backend.onrender.com/socket.io/:path*"
     },
     {
