@@ -311,19 +311,61 @@ function App() {
 
    // Loading
 
-   if (loading) {
+   const [count, setCount] = useState(60);
 
-      return (
+useEffect(() => {
 
-         <div>
+ if (!loading) return;
 
-            Loading...
+ const timer = setInterval(() => {
 
-         </div>
+  setCount((prev) => {
 
-      );
+   if (prev <= 1) {
+
+    clearInterval(timer);
+
+    return 0;
 
    }
+
+   return prev - 1;
+
+  });
+
+ }, 1000);
+
+ return () => clearInterval(timer);
+
+}, [loading]);
+
+if (loading) {
+
+ return (
+
+  <div className="h-screen w-full flex items-center justify-center bg-black text-white">
+
+   <div className="text-center">
+
+    <h1 className="text-2xl font-semibold mb-3">
+
+     Starting server...
+
+    </h1>
+
+    <p className="text-zinc-400">
+
+     Please wait {count}s
+
+    </p>
+
+   </div>
+
+  </div>
+
+ );
+
+}
 
    return <Outlet />;
 
