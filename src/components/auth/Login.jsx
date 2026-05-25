@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { loginUser as loginUserApi } from '../../../api/auth'
+import { loginUser as loginUserApi } from '../../api/auth'
 import { login } from '../../store/authSlice'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';

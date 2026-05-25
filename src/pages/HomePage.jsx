@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/authSlice";
-import { logoutUser } from '../../api/auth';
+import { logoutUser } from '../api/auth';
 import { Link,Navigate, useNavigate } from 'react-router-dom';
 import Navbar from '../components/navbar/Navbar';
 import ContentLoggedIn from '../components/home/ContentLoggedIn';

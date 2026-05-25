@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {MessageCircle,Users,User,Mail,ChevronRight} from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
-import {getConnections,removeFriend} from "../../api/request";
+import {getConnections,removeFriend} from "../api/request";
 import {socket} from "../socket/socket";
 
 function ProfilePage(){

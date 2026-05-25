@@ -2,8 +2,8 @@ import React,{useEffect,useState} from "react";
 import {useNavigate,useParams} from "react-router-dom";
 import {MessageCircle,Users,UserPlus,Mail,ArrowLeft,ChevronRight} from "lucide-react";
 import Navbar from "../components/navbar/Navbar";
-import {sendRequest} from "../../api/request";
-import {getUserProfile} from "../../api/auth";
+import {sendRequest} from "../api/request";
+import {getUserProfile} from "../api/auth";
 import {socket} from "../socket/socket";
 
 function UserProfilePage(){

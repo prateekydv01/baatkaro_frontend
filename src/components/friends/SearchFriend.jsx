@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { socket } from "../../socket/socket";
-import { searchUsers } from "../../../api/auth";
-import { sendRequest } from "../../../api/request";
+import { searchUsers } from "../../api/auth";
+import { sendRequest } from "../../api/request";
 
 function SearchFriend() {
 

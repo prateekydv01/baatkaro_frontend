@@ -2,7 +2,7 @@ import React,{useEffect,useState} from "react";
 import {useSelector} from "react-redux";
 import {MessageCircle,Users,ArrowRight,Search} from "lucide-react";
 import {useNavigate} from "react-router-dom";
-import {getConnections} from "../../../api/request";
+import {getConnections} from "../../api/request";
 import { socket } from "../../socket/socket";
 
 function ContentLoggedIn(){

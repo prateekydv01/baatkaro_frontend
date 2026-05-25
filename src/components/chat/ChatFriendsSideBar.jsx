@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import { getConnections } from "../../../api/request";
+import { getConnections } from "../../api/request";
 import { socket } from "../../socket/socket";
 import { useNavigate } from "react-router-dom";
 

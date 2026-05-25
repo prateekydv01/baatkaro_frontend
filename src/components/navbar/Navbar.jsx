@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from "react";
 import {useDispatch,useSelector} from "react-redux";
 import {logout} from "../../store/authSlice";
-import {logoutUser} from "../../../api/auth";
+import {logoutUser} from "../../api/auth";
 import {useLocation,useNavigate} from "react-router-dom";
 import {Menu,X,MessageCircle,Users,Moon,Sun,Bell} from "lucide-react";
 

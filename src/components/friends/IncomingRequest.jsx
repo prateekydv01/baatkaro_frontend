@@ -5,7 +5,7 @@ import {
   getIncomingRequests,
   acceptRequest,
   rejectRequest,
-} from "../../../api/request";
+} from "../../api/request";
 
 function IncomingRequests() {
 

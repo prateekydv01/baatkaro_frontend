@@ -5,7 +5,7 @@ import Navbar from "../components/navbar/Navbar";
 import ChatFriendsSideBar from "../components/chat/ChatFriendsSideBar";
 import ChatSection from "../components/chat/ChatSection";
 
-import { getConnections } from "../../api/request";
+import { getConnections } from "../api/request";
 
 function ChatPage() {
 

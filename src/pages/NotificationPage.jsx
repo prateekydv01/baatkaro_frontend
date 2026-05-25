@@ -2,9 +2,9 @@ import React from "react";
 import {useDispatch,useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import Navbar from "../components/navbar/Navbar";
-import {markNotificationRead} from "../../api/notification";
+import {markNotificationRead} from "../api/notification";
 import {markNotificationRead as markRead,removeNotification} from "../store/notificationSlice";
-import {deleteNotification} from "../../api/notification";
+import {deleteNotification} from "../api/notification";
 import {Trash2,BellRing} from "lucide-react";
 
 function NotificationPage(){

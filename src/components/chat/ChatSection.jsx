@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useRef} from "react";
-import { sendMessage,getMessages,deleteMessage } from "../../../api/chat";
+import { sendMessage,getMessages,deleteMessage } from "../../api/chat";
 import { useSelector } from "react-redux";
 import { socket } from "../../socket/socket";
 import { useNavigate } from "react-router-dom";

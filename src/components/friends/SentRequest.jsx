@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   getSentRequests,
   cancelRequest,
-} from "../../../api/request";
+} from "../../api/request";
 
 import { socket } from "../../socket/socket";
 

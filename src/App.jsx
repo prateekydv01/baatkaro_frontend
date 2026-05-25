@@ -8,16 +8,16 @@ import { Outlet } from "react-router-dom";
 
 import toast from "react-hot-toast";
 
-import { getCurrentUser } from "../api/auth.js";
+import { getCurrentUser } from "./api/auth.js";
 
 import {
    getNotifications
-} from "../api/notification.js";
+} from "./api/notification.js";
 
 import {
    login,
    logout
-} from "./store/authSlice.js";
+} from "./store/authSlice";
 
 import {
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { socket } from "../../socket/socket";
-import { getConnections } from "../../../api/request";
-import { removeFriend } from "../../../api/request";
+import { getConnections } from "../../api/request";
+import { removeFriend } from "../../api/request";
 import { useNavigate } from "react-router-dom";
 
 function FriendsList() {
